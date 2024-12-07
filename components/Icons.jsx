@@ -8,6 +8,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 
 
+
 export const BackIcon = (props) => {
     return (
         <AntDesign name="leftcircle" size={props.size} color={props.color} {...props} />
@@ -44,20 +45,26 @@ export const PlusIcon = (props) => {
     )
 }
 
-export const PinIcon = (props)=>{
-    return(
-        <Entypo name="location-pin" size={props.size} color={props.color}  {...props} /> 
+export const PinIcon = (props) => {
+    return (
+        <Entypo name="location-pin" size={props.size} color={props.color}  {...props} />
     )
 }
 
-export const Ellipsis = (props)=>{
-    return(
+export const Ellipsis = (props) => {
+    return (
         <FontAwesome6 name="ellipsis-vertical" size={props.size} color={props.color} {...props} />
     )
 }
 
-export const BellIcon = (props)=>{
-    return(
+export const BellIcon = (props) => {
+    return (
         <FontAwesome name="bell" size={props.size} color={props.color} {...props} />
+    )
+}
+
+export const NotificationBellIcon = (props) => {
+    return (
+        <Entypo name="bell" size={props.size} color={props.color} {...props} />
     )
 }
