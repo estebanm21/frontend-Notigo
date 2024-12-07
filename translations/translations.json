@@ -94,7 +94,9 @@
       "unsavedChanges": "Unsaved changes will be lost.",
       "continue": "Continue",
       "storeUpdated": "Store updated",
-      "success": "Success"
+      "success": "Success",
+      "unsubscribe": "Unsubscribe",
+      "subscribed": "Subscribed"
 
       
     },
@@ -193,7 +195,9 @@
   "unsavedChanges": "Los cambios no guardados se perderán.",
   "continue": "Continuar",
   "storeUpdated": "Tienda actualizada",
-  "success": "Éxito"
+  "success": "Éxito",
+  "unsubscribe": "Eliminar suscripción",
+  "subscribed": "Suscrito"
   
 
   },
@@ -292,7 +296,9 @@
     "unsavedChanges": "Le modifiche non salvate andranno perse.",
     "continue": "Continua",
     "storeUpdated": "Negozio aggiornato",
-    "success": "Successo"
+    "success": "Successo",
+    "unsubscribe": "Annulla iscrizione",
+    "subscribed": "Iscritto"
 
 
   },
@@ -391,7 +397,9 @@
     "unsavedChanges": "बिना सहेजे गए परिवर्तन खो जाएंगे।",
     "continue": "जारी रखें",
     "storeUpdated": "स्टोर अपडेट किया गया",
-    "success": "सफलता"
+    "success": "सफलता",
+    "unsubscribe": "अस्वीकृत करें",
+    "subscribed": "सदस्यता ली"
   },
   "zh": {
     "client": "客户",
@@ -488,7 +496,9 @@
   "unsavedChanges": "未保存的更改将丢失。",
   "continue": "继续",
   "storeUpdated": "商店已更新",
-  "success": "成功"
+  "success": "成功",
+  "unsubscribe": "取消订阅",
+  "subscribed": "已订阅"
 
   },
   "pt": {
@@ -586,7 +596,9 @@
   "unsavedChanges": "As alterações não salvas serão perdidas.",
   "continue": "Continuar",
   "storeUpdated": "Loja atualizada",
-  "success": "Sucesso"
+  "success": "Sucesso",
+  "unsubscribe": "Cancelar inscrição",
+  "subscribed": "Inscrito"
 
   },
   "ru": {
@@ -684,7 +696,9 @@
   "unsavedChanges": "Несохраненные изменения будут утеряны.",
   "continue": "Продолжить",
   "storeUpdated":"Магазин обновлен",
-  "success": "Успех"
+  "success": "Успех",
+  "unsubscribe": "Отписаться",
+  "subscribed": "Подписан"
 
     
   }

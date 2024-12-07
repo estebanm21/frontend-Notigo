@@ -18,6 +18,7 @@ import * as Location from 'expo-location'; // Para obtener la ubicación en tiem
 import { Ionicons } from '@expo/vector-icons'; //
 import i18n from '../../config/i18nConfig';
 import CardStore from '../../components/CardStore';
+import { useSelector } from 'react-redux';
 
 const logoNotiGo = require('../../assets/NotiGoLogo.png');
 
@@ -30,7 +31,11 @@ export default function Stores() {
   const [category, setCategory] = useState('1'); // Guarda la categoría seleccionada, por defecto "Todas"
   const [searchText, setSearchText] = useState(''); // Estado para el texto de búsqueda
 
+  const [subscriptionStatus, setSubscriptionStatus] = useState({});
+
   const searchInputRef = useRef(null); // Referencia al input
+
+  const userToken = useSelector((state) => state.userInfo.token);
 
   const categorias = [
     { id: '1', nombre: i18n.t('All') },
@@ -80,7 +85,7 @@ export default function Stores() {
     const fetchStores = async () => {
       try {
         const response = await axios.get(
-          'http://192.168.1.39:3000/api/v1/store/'
+          'http://192.168.1.40:3000/api/v1/store/'
         );
         setStores(response.data.setores); // Almacenar las tiendas en el estado
       } catch (error) {
@@ -92,6 +97,38 @@ export default function Stores() {
 
     fetchStores(); // Llamar la función al montar el componente
   }, []); // El arreglo vacío asegura que solo se ejecute una vez al montar el componente
+
+  const [isSubscribed, setIsSubscribed] = useState(false); // Para controlar si el usuario está suscrito
+
+  const subscribeToStore = async (storeId) => {
+    try {
+      const url = 'http://192.168.1.40:3000/api/v1/suscription/subscribe';
+      const response = await axios.post(
+        url,
+        { storeId },
+        {
+          headers: { Authorization: `Bearer ${userToken}` },
+        }
+      );
+    } catch (error) {
+      console.error('Error al suscribirse', error);
+    }
+  };
+
+  const unsubscribeFromStore = async (storeId) => {
+    try {
+      const url = 'http://192.168.1.40:3000/api/v1/suscription/unsubscribe';
+      const response = await axios.post(
+        url,
+        { storeId },
+        {
+          headers: { Authorization: `Bearer ${userToken}` },
+        }
+      );
+    } catch (error) {
+      console.error('Error al desuscribirse', error);
+    }
+  };
 
   // Calcular distancia entre el usuario y la tienda
   const calculateDistance = (userLocation, storeLocation) => {
@@ -212,6 +249,8 @@ export default function Stores() {
             formatDistance={formatDistance}
             filteredStores={filteredStores}
             location={location}
+            subscribeToStore={subscribeToStore}
+            unsubscribeFromStore={unsubscribeFromStore}
           />
         )}
         style={styles.container_cards}

@@ -29,7 +29,7 @@ export default function Detail() {
   const fetchStore = async () => {
     try {
       const response = await axios.get(
-        `http://192.168.1.39:3000/api/v1/store/${id}`
+        `http://192.168.1.40:3000/api/v1/store/${id}`
       );
       setStore(response.data.store);
     } catch (error) {

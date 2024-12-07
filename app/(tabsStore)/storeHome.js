@@ -86,7 +86,7 @@ export default function StoreHome() {
     }
     try {
       const response = await axios.patch(
-        `http://192.168.1.39:3000/api/v1/store/${storeId}`,
+        `http://192.168.1.40:3000/api/v1/store/${storeId}`,
         {
           latitude: coords.latitude,
           longitude: coords.longitude,
@@ -111,7 +111,7 @@ export default function StoreHome() {
     }
     try {
       const response = await axios.patch(
-        `http://192.168.1.39:3000/api/v1/store/${storeId}`,
+        `http://192.168.1.40:3000/api/v1/store/${storeId}`,
         {
           locationRadius: radius,
         },

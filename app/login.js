@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import { useRouter } from "expo-router";
+import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import {
   Text,
   Pressable,
@@ -9,23 +9,23 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
-} from "react-native";
-import { Screen } from "../components/Secreen";
-import { BackIcon } from "../components/Icons";
-import { LinearGradient } from "expo-linear-gradient";
-import Google from "../components/Google";
-import Facebook from "../components/Facebook";
-import i18n from "../config/i18nConfig";
-import { useLanguage } from "../components/LanguajeContext";
-import { useForm, Controller } from "react-hook-form";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import { useState, useEffect } from "react";
-import axios from "react-native-axios";
-import { useDispatch, useSelector } from "react-redux";
-import { setUserInfo } from "../src/store/slices/userInfo.slices";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Importa AsyncStorage
+} from 'react-native';
+import { Screen } from '../components/Secreen';
+import { BackIcon } from '../components/Icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import Google from '../components/Google';
+import Facebook from '../components/Facebook';
+import i18n from '../config/i18nConfig';
+import { useLanguage } from '../components/LanguajeContext';
+import { useForm, Controller } from 'react-hook-form';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useState, useEffect } from 'react';
+import axios from 'react-native-axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserInfo } from '../src/store/slices/userInfo.slices';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Importa AsyncStorage
 
-const logoNotiGo = require("../assets/NotiGoLogo.png");
+const logoNotiGo = require('../assets/NotiGoLogo.png');
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -37,16 +37,15 @@ export default function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-
   useEffect(() => {
     const checkFirstTime = async () => {
-      const isFirstTimeFlag = await AsyncStorage.getItem("isFirstTime");
+      const isFirstTimeFlag = await AsyncStorage.getItem('isFirstTime');
 
       if (isFirstTimeFlag) {
         setIsFirstTime(false); // Si no es la primera vez, actualizamos el estado
       } else {
         // Si es la primera vez, guardamos en AsyncStorage
-        await AsyncStorage.setItem("isFirstTime", "false");
+        await AsyncStorage.setItem('isFirstTime', 'false');
       }
     };
 
@@ -64,9 +63,9 @@ export default function Login() {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const savedToken = await AsyncStorage.getItem("userToken");
+        const savedToken = await AsyncStorage.getItem('userToken');
         const savedUserOrStore = JSON.parse(
-          await AsyncStorage.getItem("userInfo")
+          await AsyncStorage.getItem('userInfo')
         );
 
         if (savedToken && savedUserOrStore) {
@@ -81,22 +80,20 @@ export default function Login() {
           );
 
           // Redirigir según el tipo de usuario
-          router.push(isStore ? "/storeHome" : "/clientHome");
+          router.push(isStore ? '/storeHome' : '/clientHome');
         }
       } catch (error) {
-        console.error("Error al recuperar el estado del usuario:", error);
+        console.error('Error al recuperar el estado del usuario:', error);
       }
     };
 
     checkLoginStatus();
   }, [dispatch, router]);
 
-
-
   const onSubmit = async (data) => {
     const url = isStore
-      ? "http://192.168.1.39:3000/api/v1/auth/store/signin"
-      : "http://192.168.1.39:3000/api/v1/auth/user/signin";
+      ? 'http://192.168.1.40:3000/api/v1/auth/store/signin'
+      : 'http://192.168.1.40:3000/api/v1/auth/user/signin';
 
     try {
       const response = await axios.post(url, {
@@ -109,11 +106,11 @@ export default function Login() {
       const { token, user, store } = response.data;
 
       // Guardar el token y la información en AsyncStorage
-      await AsyncStorage.setItem("userToken", token);
+      await AsyncStorage.setItem('userToken', token);
 
       // Guardar la información del usuario/tienda en AsyncStorage
       await AsyncStorage.setItem(
-        "userInfo",
+        'userInfo',
         JSON.stringify({ ...(user || store), isStore: Boolean(store) })
       );
 
@@ -127,45 +124,44 @@ export default function Login() {
 
       // Redirigir a la página correspondiente
       if (isStore) {
-        router.push("/storeHome");
+        router.push('/storeHome');
       } else {
-        router.push("/clientHome");
+        router.push('/clientHome');
       }
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.message;
-        Alert.alert(i18n.t("authenticationError"), errorMessage, [
-          { text: "OK" },
+        Alert.alert(i18n.t('authenticationError'), errorMessage, [
+          { text: 'OK' },
         ]);
       } else if (error.request) {
         Alert.alert(
-          i18n.t("connectionErrorTitle"),
-          i18n.t("connectionErrorMessage"),
-          [{ text: "OK" }]
+          i18n.t('connectionErrorTitle'),
+          i18n.t('connectionErrorMessage'),
+          [{ text: 'OK' }]
         );
       } else {
         Alert.alert(
-          i18n.t("unexpectedErrorTitle"),
-          i18n.t("unexpectedErrorMessage"),
-          [{ text: "OK" }]
+          i18n.t('unexpectedErrorTitle'),
+          i18n.t('unexpectedErrorMessage'),
+          [{ text: 'OK' }]
         );
       }
     }
   };
 
   const navigateToRole = () => {
-    router.push("/role");
+    router.push('/role');
   };
 
   return (
     <Screen>
       <View style={styles.signInSection}>
-        <Text style={styles.signInText}>{i18n.t("noAccount")}</Text>
+        <Text style={styles.signInText}>{i18n.t('noAccount')}</Text>
 
         <TouchableOpacity onPress={navigateToRole} style={styles.signInButton}>
-          <Text style={styles.signInButtonText}>{i18n.t("createAccount")}</Text>
+          <Text style={styles.signInButtonText}>{i18n.t('createAccount')}</Text>
         </TouchableOpacity>
-       
       </View>
 
       <View style={styles.logoContainer}>
@@ -175,7 +171,7 @@ export default function Login() {
 
       <View style={styles.modalContainer}>
         <Text style={styles.modalTitle}>
-          {isFirstTime ? i18n.t("getStartedTitle") : i18n.t("welcomeBack")}{" "}
+          {isFirstTime ? i18n.t('getStartedTitle') : i18n.t('welcomeBack')}{' '}
           {/* Cambiar el título */}
         </Text>
 
@@ -190,7 +186,7 @@ export default function Login() {
                 !isStore && styles.selectedText,
               ]}
             >
-              {i18n.t("user")}
+              {i18n.t('user')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -203,7 +199,7 @@ export default function Login() {
                 isStore && styles.selectedText,
               ]}
             >
-              {i18n.t("store")}
+              {i18n.t('store')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -214,19 +210,19 @@ export default function Login() {
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
                 style={styles.input}
-                placeholder={i18n.t("emailPlaceholder")}
+                placeholder={i18n.t('emailPlaceholder')}
                 placeholderTextColor="#ccc"
-                value={value || ""}
+                value={value || ''}
                 onBlur={onBlur}
                 onChangeText={onChange}
               />
             )}
             name="email"
             rules={{
-              required: i18n.t("emailRequired"),
+              required: i18n.t('emailRequired'),
               pattern: {
                 value: /\S+@\S+\.\S+/,
-                message: i18n.t("emailInvalid"),
+                message: i18n.t('emailInvalid'),
               },
             }}
           />
@@ -242,10 +238,10 @@ export default function Login() {
               <View style={styles.passwordInputContainer}>
                 <TextInput
                   style={styles.input}
-                  placeholder={i18n.t("passwordPlaceholder")}
+                  placeholder={i18n.t('passwordPlaceholder')}
                   placeholderTextColor="#ccc"
                   secureTextEntry={!showPassword}
-                  value={value || ""}
+                  value={value || ''}
                   onBlur={onBlur}
                   onChangeText={onChange}
                 />
@@ -254,7 +250,7 @@ export default function Login() {
                   onPress={() => setShowPassword(!showPassword)}
                 >
                   <Icon
-                    name={showPassword ? "visibility-off" : "visibility"}
+                    name={showPassword ? 'visibility-off' : 'visibility'}
                     size={24}
                     color="#ccc"
                   />
@@ -263,10 +259,10 @@ export default function Login() {
             )}
             name="password"
             rules={{
-              required: i18n.t("passwordRequired"),
+              required: i18n.t('passwordRequired'),
               minLength: {
                 value: 6,
-                message: i18n.t("passwordTooShort"),
+                message: i18n.t('passwordTooShort'),
               },
             }}
           />
@@ -276,19 +272,19 @@ export default function Login() {
         </View>
 
         <LinearGradient
-          colors={["#6A101A", "#E53039"]}
+          colors={['#6A101A', '#E53039']}
           start={[0, 0]}
           end={[1, 0]}
           style={styles.signUpButton}
         >
           <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.signUpButtonText}>{i18n.t("enter")}</Text>
+            <Text style={styles.signUpButtonText}>{i18n.t('enter')}</Text>
           </TouchableOpacity>
         </LinearGradient>
 
         <View style={styles.separatorContainer}>
           <View style={styles.separator}></View>
-          <Text style={styles.separatorText}>{i18n.t("signInWith")}</Text>
+          <Text style={styles.separatorText}>{i18n.t('signInWith')}</Text>
           <View style={styles.separator}></View>
         </View>
 
@@ -296,13 +292,13 @@ export default function Login() {
           <TouchableOpacity style={styles.socialButton}>
             <Google />
             <Text style={styles.socialButtonTextGoogle}>
-              {i18n.t("google")}
+              {i18n.t('google')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.socialButton}>
             <Facebook />
             <Text style={styles.socialButtonTextFacebook}>
-              {i18n.t("facebook")}
+              {i18n.t('facebook')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -317,41 +313,41 @@ const styles = StyleSheet.create({
   },
 
   logoContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    position: "absolute",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
     top: 150,
   },
 
   textLogo: {
     marginLeft: 5,
-    color: "#fff",
+    color: '#fff',
     fontSize: 35,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 
   backIconContainer: {
-    position: "absolute",
+    position: 'absolute',
     top: 50,
     left: 20,
     zIndex: 100,
   },
 
   modalContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     marginTop: 300,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     padding: 20,
     flex: 1,
-    width: "100%",
+    width: '100%',
   },
 
   modalTitle: {
     fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontWeight: 'bold',
+    textAlign: 'center',
     marginBottom: 20,
   },
 
@@ -360,155 +356,155 @@ const styles = StyleSheet.create({
   },
 
   passwordInputContainer: {
-    position: "relative",
+    position: 'relative',
   },
 
   input: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderRadius: 8,
     padding: 13,
     fontSize: 16,
-    color: "#333",
+    color: '#333',
     paddingRight: 40,
   },
 
   errorText: {
-    color: "red",
+    color: 'red',
     fontSize: 12,
     marginTop: 5,
   },
 
   authErrorText: {
-    color: "red",
+    color: 'red',
     fontSize: 14,
     marginTop: 10,
-    textAlign: "center",
+    textAlign: 'center',
   },
 
   signUpButton: {
     paddingVertical: 20,
     borderRadius: 12,
     marginTop: 5,
-    alignItems: "center",
+    alignItems: 'center',
   },
 
   signUpButtonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 
   separatorContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginVertical: 20,
   },
 
   separator: {
     flex: 1,
     height: 1,
-    backgroundColor: "#ccc",
+    backgroundColor: '#ccc',
   },
 
   separatorText: {
     marginHorizontal: 10,
-    color: "#888",
+    color: '#888',
   },
 
   socialButtonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 
   socialButton: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     flex: 1,
     paddingVertical: 15,
     borderRadius: 8,
     marginHorizontal: 5,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "center",
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
     gap: 2,
-    borderColor: "#AAAABC",
+    borderColor: '#AAAABC',
     borderWidth: 1,
   },
   socialButtonTextGoogle: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: 'bold',
+    color: '#333',
   },
 
   socialButtonTextFacebook: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#1976D2",
+    fontWeight: 'bold',
+    color: '#1976D2',
   },
 
   signInSection: {
-    position: "absolute",
+    position: 'absolute',
     top: 50,
     right: 20,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     zIndex: 100,
   },
 
   signInText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
   },
 
   signInButton: {
     marginLeft: 5,
-    backgroundColor: "#6E2C34",
+    backgroundColor: '#6E2C34',
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: 8,
   },
 
   signInButtonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 
   eyeIcon: {
-    position: "absolute",
+    position: 'absolute',
     right: 10,
-    top: "50%",
+    top: '50%',
     transform: [{ translateY: -12 }],
   },
 
   userTypeSelector: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 20,
   },
   userTypeButton: {
     padding: 10,
     borderRadius: 8,
-    backgroundColor: "#f0f0f0",
-    width: "48%",
-    alignItems: "center",
+    backgroundColor: '#f0f0f0',
+    width: '48%',
+    alignItems: 'center',
   },
   userTypeButtonText: {
     fontSize: 16,
-    color: "#f8f9fa",
-    fontWeight: "bold",
+    color: '#f8f9fa',
+    fontWeight: 'bold',
   },
 
   selectedButton: {
-    backgroundColor: "#e63946", // Fondo rojo cuando está seleccionado
+    backgroundColor: '#e63946', // Fondo rojo cuando está seleccionado
   },
   selectedText: {
-    color: "#fff", // Texto blanco cuando el botón está seleccionado
+    color: '#fff', // Texto blanco cuando el botón está seleccionado
   },
   userTypeButtonText: {
     fontSize: 16,
-    color: "#333", // Texto en gris por defecto
-    fontWeight: "bold",
+    color: '#333', // Texto en gris por defecto
+    fontWeight: 'bold',
   },
 });

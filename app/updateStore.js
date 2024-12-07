@@ -104,7 +104,7 @@ export default function UpdateStore() {
       // 1. Primero, actualizamos los datos de la tienda (sin imagen)
       const storeData = { name, address, categorie, description };
       const response = await axios.patch(
-        `http://192.168.1.39:3000/api/v1/store/${storeInfo.id}`,
+        `http://192.168.1.40:3000/api/v1/store/${storeInfo.id}`,
         storeData,
         {
           headers: {
@@ -132,7 +132,7 @@ export default function UpdateStore() {
         try {
           // Subimos la imagen
           const imgResponse = await axios.patch(
-            `http://192.168.1.39:3000/api/v1/store/upload-business-img/${storeInfo.id}`,
+            `http://192.168.1.40:3000/api/v1/store/upload-business-img/${storeInfo.id}`,
             formData,
             {
               headers: {
