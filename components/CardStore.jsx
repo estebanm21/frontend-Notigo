@@ -32,27 +32,29 @@ export default function CardStore({ item: store, index, calculateDistance, forma
 
 
 
+
+
     useEffect(() => {
-        // Cargar el estado de la suscripción desde AsyncStorage cuando el componente se monta
         const checkSubscription = async () => {
             try {
                 const subscriptions = await AsyncStorage.getItem('subscriptions'); // Obtener las suscripciones guardadas
                 const parsedSubscriptions = subscriptions ? JSON.parse(subscriptions) : [];
-                if (parsedSubscriptions.includes(store.id)) {
-                    dispatch(setIsSubscribedState(true)); // El usuario está suscrito
-                } else {
-                    dispatch(setIsSubscribedState(false)); // El usuario no está suscrito
-                }
+
+                dispatch(setIsSubscribedState({
+                    storeId: store.id,
+                    isSubscribed: parsedSubscriptions.includes(store.id), // Compara si la tienda está suscrita
+                }));
             } catch (error) {
-
-
                 console.log('Error al cargar las suscripciones', error);
-
             }
         };
 
         checkSubscription(); // Comprobar la suscripción al montar el componente
-    }, [store.id]);
+    }, [store.id, dispatch]);
+
+
+
+
 
     const handleSubscriptionChange = async () => {
         try {

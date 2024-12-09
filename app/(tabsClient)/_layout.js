@@ -8,6 +8,8 @@ import {
 } from '../../components/Icons';
 import i18n from '../../config/i18nConfig';
 
+import { BlurView } from 'expo-blur';
+
 export default function TabsLayout() {
   return (
     <Tabs

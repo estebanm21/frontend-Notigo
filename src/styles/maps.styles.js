@@ -1,160 +1,201 @@
 export const customStyle = [
   {
-    elementType: "geometry",
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#eaf1fb", // Fondo del mapa, un tono muy claro
+        color: '#eaf1fb', // Fondo del mapa, un tono muy claro
       },
     ],
   },
   {
-    elementType: "labels.text.fill",
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#746855",
+        color: '#746855',
       },
     ],
   },
   {
-    elementType: "labels.text.stroke",
+    elementType: 'labels.text.stroke',
     stylers: [
       {
-        color: "#eaf1fb", // Fondo para que el borde no se vea blanco
+        color: '#eaf1fb', // Fondo para que el borde no se vea blanco
       },
     ],
   },
   {
-    featureType: "administrative.locality",
-    elementType: "labels.text.fill",
+    featureType: 'administrative.locality', // Ciudades, zonas administrativas
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#d59563",
+        color: '#d59563',
       },
     ],
   },
   {
-    featureType: "poi",
-    elementType: "labels.text.fill",
+    featureType: 'poi', // Points of Interest - Todos los puntos de interés
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#d59563",
+        color: '#d59563',
       },
     ],
   },
   {
-    featureType: "poi.park",
-    elementType: "geometry",
+    featureType: 'poi.park', // Parques
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#263c3f",
+        color: '#263c3f', // Mantener el color oscuro para los parques
       },
     ],
   },
   {
-    featureType: "poi.park",
-    elementType: "labels.text.fill",
+    featureType: 'poi.park', // Etiquetas de parques
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#6b9a76",
+        color: '#6b9a76', // Texto de parques
       },
     ],
   },
   {
-    featureType: "road",
-    elementType: "geometry",
+    featureType: 'road', // Calles pequeñas
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#ffffff", // Calles pequeñas en blanco
+        color: '#ffffff', // Calles pequeñas en blanco
       },
     ],
   },
   {
-    featureType: "road",
-    elementType: "geometry.stroke",
+    featureType: 'road', // Eliminar bordes de calles pequeñas
+    elementType: 'geometry.stroke',
     stylers: [
       {
-        color: "#eaf1fb", // Eliminar el borde gris de las calles
+        color: '#eaf1fb', // Eliminar el borde gris de las calles pequeñas
       },
     ],
   },
   {
-    featureType: "road",
-    elementType: "labels.text.fill",
+    featureType: 'road', // Etiquetas de calles pequeñas
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#9ca5b3",
+        color: '#9ca5b3',
       },
     ],
   },
   {
-    featureType: "road.highway",
-    elementType: "geometry",
+    featureType: 'road.highway', // Carreteras principales
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#c2d4e7", // Gris pastel para las carreteras principales
+        color: '#c2d4e7', // Gris pastel para las carreteras principales
       },
     ],
   },
   {
-    featureType: "road.highway",
-    elementType: "geometry.stroke",
+    featureType: 'road.highway', // Eliminar bordes en autopistas
+    elementType: 'geometry.stroke',
     stylers: [
       {
-        color: "#eaf1fb", // Eliminar el borde gris en las autopistas
+        color: '#eaf1fb', // Eliminar el borde gris en las autopistas
       },
     ],
   },
   {
-    featureType: "road.highway",
-    elementType: "labels.text.fill",
+    featureType: 'road.highway', // Etiquetas de autopistas
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#f3d19c", // Deja el texto de las autopistas en un color suave
+        color: '#f3d19c', // Texto de autopistas en color suave
       },
     ],
   },
   {
-    featureType: "transit",
-    elementType: "geometry",
+    featureType: 'transit', // Transporte público
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#2f3948",
+        color: '#2f3948', // Color oscuro para el transporte
       },
     ],
   },
   {
-    featureType: "transit.station",
-    elementType: "labels.text.fill",
+    featureType: 'transit.station', // Estaciones de transporte público
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#d59563",
+        color: '#d59563',
       },
     ],
   },
   {
-    featureType: "water",
-    elementType: "geometry",
+    featureType: 'water', // Agua (lagos, ríos, océanos)
+    elementType: 'geometry',
     stylers: [
       {
-        color: "#17263c",
+        color: '#17263c', // Color oscuro para el agua
       },
     ],
   },
   {
-    featureType: "water",
-    elementType: "labels.text.fill",
+    featureType: 'water', // Etiquetas de agua
+    elementType: 'labels.text.fill',
     stylers: [
       {
-        color: "#515c6d",
+        color: '#515c6d', // Texto de cuerpos de agua
       },
     ],
   },
   {
-    featureType: "water",
-    elementType: "labels.text.stroke",
+    featureType: 'water', // Borde de agua
+    elementType: 'labels.text.stroke',
     stylers: [
       {
-        color: "#17263c",
+        color: '#17263c', // Borde oscuro para agua
+      },
+    ],
+  },
+  // Ocultar los puntos de interés menos importantes (pequeños restaurantes, tiendas, etc.)
+  {
+    featureType: 'poi.business',
+    stylers: [
+      {
+        visibility: 'off', // Ocultar negocios (tiendas, restaurantes)
+      },
+    ],
+  },
+  {
+    featureType: 'poi.sports_complex', // Ocultar complejos deportivos
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.medical', // Ocultar hospitales, clínicas, etc.
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.school', // Ocultar escuelas
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.place_of_worship', // Ocultar lugares de culto (iglesias, templos)
+    stylers: [
+      {
+        visibility: 'off',
       },
     ],
   },

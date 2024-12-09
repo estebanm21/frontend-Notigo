@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Alert,
   Dimensions,
+  Image,
   BackHandler,
 } from 'react-native';
 import { Screen } from '../../components/Secreen'; // Asegúrate de tener este componente
@@ -12,11 +13,45 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location'; // Para obtener la ubicación
 import { PermissionsAndroid, Platform } from 'react-native';
 import { customStyle } from '../../src/styles/maps.styles';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { useFocusEffect } from 'expo-router';
 
 export default function ClientHome() {
   const [location, setLocation] = useState(null); // Estado para almacenar la ubicación
   const [errorMsg, setErrorMsg] = useState(null);
   const [watching, setWatching] = useState(false); // Estado para saber si estamos "observando" la ubicación
+  const [stores, setStores] = useState([]); // Estado para almacenar las tiendas
+
+  const userToken = useSelector((state) => state.userInfo.token);
+
+  const fetchStores = async () => {
+    try {
+      const response = await axios.get(
+        'http://192.168.1.40:3000/api/v1/suscription/mysubscriptions',
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+      setStores(response.data.stores); // Almacenar las tiendas en el estado
+    } catch (error) {
+      console.error('Error al obtener las tiendas', error);
+    } finally {
+      setLoading(false); // Detener el indicador de carga
+    }
+  };
+
+  useEffect(() => {
+    fetchStores();
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchStores(); // Vuelve a cargar las tiendas cuando se navega de vuelta a esta pantalla
+    }, [])
+  );
 
   useEffect(() => {
     const backAction = () => {
@@ -103,14 +138,40 @@ export default function ClientHome() {
     );
   }
 
-  // Rango de radio de la tienda (ejemplo)
-  const storeLocation = {
-    latitude: 19.432608, // Coordenadas de la tienda
-    longitude: -99.133209, // Coordenadas de la tienda
-  };
-  const storeRadius = 500; // Radio de 500 metros
+  // // Rango de radio de la tienda (ejemplo)
+  // const storeLocation = {
+  //   latitude: 19.432608, // Coordenadas de la tienda
+  //   longitude: -99.133209, // Coordenadas de la tienda
+  // };
 
-  // Calcular si el usuario está dentro del radio de la tienda (simplificado)
+  // // const storeRadius = 500; // Radio de 500 metros
+
+  // // Calcular si el usuario está dentro del radio de la tienda (simplificado)
+  // const calculateDistance = (userLocation, storeLocation) => {
+  //   const toRad = (value) => (value * Math.PI) / 180;
+  //   const R = 6371; // Radio de la Tierra en km
+
+  //   const dLat = toRad(storeLocation.latitude - userLocation.latitude);
+  //   const dLon = toRad(storeLocation.longitude - userLocation.longitude);
+
+  //   const a =
+  //     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+  //     Math.cos(toRad(userLocation.latitude)) *
+  //       Math.cos(toRad(storeLocation.latitude)) *
+  //       Math.sin(dLon / 2) *
+  //       Math.sin(dLon / 2);
+  //   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  //   const distance = R * c * 1000; // Convertimos la distancia a metros
+
+  //   return distance;
+  // };
+
+  // // Verificar si el usuario está dentro del rango de la tienda
+  // const distanceToStore = calculateDistance(location, storeLocation);
+  // const isWithinRange = distanceToStore <= storeRadius;
+
+  // Función para calcular la distancia entre dos puntos (ubicación del usuario y la tienda)
+
   const calculateDistance = (userLocation, storeLocation) => {
     const toRad = (value) => (value * Math.PI) / 180;
     const R = 6371; // Radio de la Tierra en km
@@ -130,9 +191,18 @@ export default function ClientHome() {
     return distance;
   };
 
-  // Verificar si el usuario está dentro del rango de la tienda
-  const distanceToStore = calculateDistance(location, storeLocation);
-  const isWithinRange = distanceToStore <= storeRadius;
+  // // Verificar si el usuario está dentro del rango de cada tienda
+  // const storeRadius = 500; // Radio de 500 metros
+  // const storesWithDistance = stores.map((store) => {
+  //   const distance = calculateDistance(location, store);
+  //   return { ...store, distance };
+  // });
+
+  // Verificar si el usuario está dentro del rango de cada tienda
+  const storesWithDistance = stores.map((store) => {
+    const distance = calculateDistance(location, store);
+    return { ...store, distance, locationRadius: store.locationRadius };
+  });
 
   return (
     <Screen>
@@ -153,8 +223,22 @@ export default function ClientHome() {
         {/* Mostrar la ubicación actual */}
         <Marker coordinate={location} title="Tu ubicación" pinColor="#BB4343" />
 
-        {/* Mostrar la ubicación de la tienda */}
-        <Marker coordinate={storeLocation} title="Tienda" pinColor="blue" />
+        {/* Mostrar las ubicaciones de las tiendas a las que estás suscrito */}
+        {storesWithDistance.map((store, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: store.latitude,
+              longitude: store.longitude,
+            }}
+            title={store.name}
+          >
+            <Image
+              source={{ uri: store.profileImgUrl }}
+              style={styles.customMarker}
+            />
+          </Marker>
+        ))}
       </MapView>
     </Screen>
   );
@@ -170,5 +254,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     marginTop: 50,
+  },
+  customMarker: {
+    width: 35,
+    height: 35,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: '#fff',
+    resizeMode: 'cover',
   },
 });
