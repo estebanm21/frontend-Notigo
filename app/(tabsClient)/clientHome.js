@@ -138,40 +138,6 @@ export default function ClientHome() {
     );
   }
 
-  // // Rango de radio de la tienda (ejemplo)
-  // const storeLocation = {
-  //   latitude: 19.432608, // Coordenadas de la tienda
-  //   longitude: -99.133209, // Coordenadas de la tienda
-  // };
-
-  // // const storeRadius = 500; // Radio de 500 metros
-
-  // // Calcular si el usuario está dentro del radio de la tienda (simplificado)
-  // const calculateDistance = (userLocation, storeLocation) => {
-  //   const toRad = (value) => (value * Math.PI) / 180;
-  //   const R = 6371; // Radio de la Tierra en km
-
-  //   const dLat = toRad(storeLocation.latitude - userLocation.latitude);
-  //   const dLon = toRad(storeLocation.longitude - userLocation.longitude);
-
-  //   const a =
-  //     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-  //     Math.cos(toRad(userLocation.latitude)) *
-  //       Math.cos(toRad(storeLocation.latitude)) *
-  //       Math.sin(dLon / 2) *
-  //       Math.sin(dLon / 2);
-  //   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  //   const distance = R * c * 1000; // Convertimos la distancia a metros
-
-  //   return distance;
-  // };
-
-  // // Verificar si el usuario está dentro del rango de la tienda
-  // const distanceToStore = calculateDistance(location, storeLocation);
-  // const isWithinRange = distanceToStore <= storeRadius;
-
-  // Función para calcular la distancia entre dos puntos (ubicación del usuario y la tienda)
-
   const calculateDistance = (userLocation, storeLocation) => {
     const toRad = (value) => (value * Math.PI) / 180;
     const R = 6371; // Radio de la Tierra en km
@@ -190,13 +156,6 @@ export default function ClientHome() {
 
     return distance;
   };
-
-  // // Verificar si el usuario está dentro del rango de cada tienda
-  // const storeRadius = 500; // Radio de 500 metros
-  // const storesWithDistance = stores.map((store) => {
-  //   const distance = calculateDistance(location, store);
-  //   return { ...store, distance };
-  // });
 
   // Verificar si el usuario está dentro del rango de cada tienda
   const storesWithDistance = stores.map((store) => {

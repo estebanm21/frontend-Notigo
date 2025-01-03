@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,14 @@ import {
   Alert,
   Platform,
   BackHandler,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch, useSelector } from "react-redux";
-import { clearUserInfo } from "../../src/store/slices/userInfo.slices";
-import { useRouter } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons"; // Icono de usuario
-import i18n from "../../config/i18nConfig";
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearUserInfo } from '../../src/store/slices/userInfo.slices';
+import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons'; // Icono de usuario
+import i18n from '../../config/i18nConfig';
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -27,28 +27,28 @@ export default function Profile() {
   // Función para manejar el cierre de sesión
   const handleLogout = async () => {
     Alert.alert(
-      i18n.t("signOut"),
-      i18n.t("areYouSureSignOut"),
+      i18n.t('signOut'),
+      i18n.t('areYouSureSignOut'),
       [
         {
-          text: i18n.t("cancel"),
-          style: "cancel",
+          text: i18n.t('cancel'),
+          style: 'cancel',
         },
         {
-          text: i18n.t("accept"),
+          text: i18n.t('accept'),
           onPress: async () => {
             try {
               // Limpiar el estado en Redux
               dispatch(clearUserInfo());
 
               // Eliminar el token y la información del usuario de AsyncStorage
-              await AsyncStorage.removeItem("userToken");
-              await AsyncStorage.removeItem("userInfo");
+              await AsyncStorage.removeItem('userToken');
+              await AsyncStorage.removeItem('userInfo');
 
               // Redirigir al usuario a la pantalla de inicio de sesión
-              router.replace("/login");
+              router.replace('/login');
             } catch (error) {
-              Alert.alert(i18n.t("error"), i18n.t("signOutError"));
+              Alert.alert(i18n.t('error'), i18n.t('signOutError'));
             }
           },
         },
@@ -59,9 +59,9 @@ export default function Profile() {
 
   useEffect(() => {
     // Prevent the back action on Android and swipe gesture on iOS
-    if (Platform.OS === "android") {
+    if (Platform.OS === 'android') {
       const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
+        'hardwareBackPress',
         () => {
           // Detener la acción de retroceder y evitar que vaya atrás
           return true; // `true` evita la acción predeterminada
@@ -77,6 +77,14 @@ export default function Profile() {
     }
   }, [navigation]);
 
+  const navigationToTermsAndConditions = () => {
+    router.push('/termsAndConditions');
+  };
+
+  const navigationToAboutNotiGo = () => {
+    router.push('/aboutNotiGo');
+  };
+
   return (
     <View style={styles.container}>
       {/* Parte superior con el ícono y nombre del usuario */}
@@ -84,33 +92,39 @@ export default function Profile() {
         <Ionicons name="person-circle-outline" size={60} color="#e26d5c" />
         <View style={styles.userInfo}>
           <Text style={styles.userName}>{userInfo?.name?.toUpperCase()}</Text>
-          <Text style={styles.userGreeting}>{i18n.t("hello")}</Text>
+          <Text style={styles.userGreeting}>{i18n.t('hello')}</Text>
         </View>
       </View>
 
       {/* Opciones del perfil */}
       <View style={styles.optionBox}>
-        <Text style={styles.optionTitle}>{i18n.t("legal")}</Text>
-        <TouchableOpacity style={styles.optionItem}>
-          <Text style={styles.optionText}>{i18n.t("termsAndConditions")}</Text>
+        <Text style={styles.optionTitle}>{i18n.t('legal')}</Text>
+        <TouchableOpacity
+          onPress={navigationToTermsAndConditions}
+          style={styles.optionItem}
+        >
+          <Text style={styles.optionText}>{i18n.t('termsAndConditions')}</Text>
           <Ionicons name="chevron-forward" size={20} color="#333" />
         </TouchableOpacity>
-        <View style={styles.divider} />
-        <TouchableOpacity style={styles.optionItem}>
-          <Text style={styles.optionText}>{i18n.t("privacyPolicy")}</Text>
+        {/* <View style={styles.divider} /> */}
+        {/* <TouchableOpacity style={styles.optionItem}>
+          <Text style={styles.optionText}>{i18n.t('privacyPolicy')}</Text>
           <Ionicons name="chevron-forward" size={20} color="#333" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <View style={styles.optionBox}>
-        <Text style={styles.optionTitle}>{i18n.t("more")}</Text>
-        <TouchableOpacity style={styles.optionItem}>
-          <Text style={styles.optionText}>{i18n.t("aboutNotiGo")}</Text>
+        <Text style={styles.optionTitle}>{i18n.t('more')}</Text>
+        <TouchableOpacity
+          onPress={navigationToAboutNotiGo}
+          style={styles.optionItem}
+        >
+          <Text style={styles.optionText}>{i18n.t('aboutNotiGo')}</Text>
           <Ionicons name="chevron-forward" size={20} color="#333" />
         </TouchableOpacity>
         <View style={styles.divider} />
         <TouchableOpacity style={styles.optionItem} onPress={handleLogout}>
-          <Text style={styles.optionText}>{i18n.t("signOut")}</Text>
+          <Text style={styles.optionText}>{i18n.t('signOut')}</Text>
           <Ionicons name="chevron-forward" size={20} color="#333" />
         </TouchableOpacity>
       </View>
@@ -121,12 +135,12 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5", // Beige
+    backgroundColor: '#f5f5f5', // Beige
     padding: 20,
   },
   profileHeader: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 30,
   },
   userInfo: {
@@ -134,16 +148,16 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 17,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: 'bold',
+    color: '#333',
   },
   userGreeting: {
     fontSize: 14,
-    color: "#777",
+    color: '#777',
     marginTop: 5,
   },
   optionBox: {
-    backgroundColor: "#fff", // Caja blanca
+    backgroundColor: '#fff', // Caja blanca
     borderRadius: 10,
     padding: 15,
     marginBottom: 20,
@@ -151,23 +165,23 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: 'bold',
+    color: '#333',
     marginBottom: 10,
   },
   optionItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingVertical: 10,
   },
   optionText: {
     fontSize: 16,
-    color: "#333",
+    color: '#333',
   },
   divider: {
     height: 1,
-    backgroundColor: "#eee",
+    backgroundColor: '#eee',
     marginVertical: 10,
   },
 });

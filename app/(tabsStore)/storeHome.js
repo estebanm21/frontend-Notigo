@@ -7,12 +7,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
-  Animated,
+  BackHandler,
   TextInput,
   FlatList,
   Keyboard,
 } from 'react-native';
 import BootomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { Screen } from '../../components/Secreen';
 import MapView, { Marker, PROVIDER_GOOGLE, Circle } from 'react-native-maps';
@@ -33,6 +34,7 @@ export default function StoreHome() {
   const [locationRadius, setLocationRadius] = useState(5);
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const storeInfo = useSelector((state) => state.userInfo.store);
   const userToken = useSelector((state) => state.userInfo.token);
@@ -46,12 +48,21 @@ export default function StoreHome() {
         const permission = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
         );
-        if (permission === PermissionsAndroid.RESULTS.GRANTED) {
-          getCurrentLocation();
-        } else {
-          setErrorMsg('Permission denied');
+        if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+          setErrorMsg('Permission to access location was denied');
+          return;
         }
+      }
+
+      // Verificar si la tienda tiene una ubicación almacenada
+      if (storeInfo?.latitude && storeInfo?.longitude) {
+        // Si tiene, establecemos la ubicación de la tienda
+        setLocation({
+          latitude: storeInfo.latitude,
+          longitude: storeInfo.longitude,
+        });
       } else {
+        // Si no tiene, solicitamos la ubicación del usuario
         getCurrentLocation();
       }
     };
@@ -62,19 +73,31 @@ export default function StoreHome() {
         setErrorMsg('Permission to access location was denied');
         return;
       }
+      // Obtén la primera posición
       let currentLocation = await Location.getLastKnownPositionAsync({});
-      setLocation(currentLocation.coords);
-
-      if (storeInfo?.id && !locationUpdated) {
-        updateStoreLocation(storeInfo.id, currentLocation.coords);
-        setLocationUpdated(true);
-      }
+      setLocation(currentLocation.coords); // Actualiza el estado con la ubicación
     };
 
     if (storeInfo?.id && !locationUpdated) {
       getLocationPermission();
     }
-  }, [storeInfo, locationUpdated]);
+  }, []);
+
+  useEffect(() => {
+    const backAction = () => {
+      // Prevenir que la acción de volver ocurra
+      return true; // Retornar 'true' previene la acción predeterminada
+    };
+
+    // Agregar el listener para el botón de retroceso
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    // Limpiar el listener cuando el componente se desmonte
+    return () => backHandler.remove();
+  }, []);
 
   const updateStoreLocation = async (storeId, coords) => {
     if (!userToken) {
@@ -97,7 +120,6 @@ export default function StoreHome() {
           },
         }
       );
-      console.log('Ubicación actualizada en la base de datos', response.data);
     } catch (error) {}
   };
 
@@ -121,10 +143,10 @@ export default function StoreHome() {
           },
         }
       );
-      console.log(
-        'Radio de ubicación actualizado en la base de datos',
-        response.data
-      );
+      // console.log(
+      //   'Radio de ubicación actualizado en la base de datos',
+      //   response.data
+      // );
     } catch (error) {
       Alert.alert(
         'Error',
@@ -172,6 +194,7 @@ export default function StoreHome() {
 
   const handleSelectPlace = async (placeId) => {
     try {
+      Keyboard.dismiss();
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/place/details/json`,
         {
@@ -185,12 +208,19 @@ export default function StoreHome() {
       const { lat, lng } = response.data.result.geometry.location;
       const updatedCoords = { latitude: lat, longitude: lng };
       setLocation(updatedCoords);
+      setIsOpenModal(false);
+      setSearchText('');
+      setSearchResults([]);
       if (storeInfo?.id) {
         updateStoreLocation(storeInfo.id, updatedCoords);
       }
     } catch (error) {
       console.error('Error obteniendo detalles del lugar:', error);
     }
+  };
+
+  const changeStatusModal = () => {
+    setIsOpenModal(!isOpenModal);
   };
 
   if (errorMsg) {
@@ -235,7 +265,7 @@ export default function StoreHome() {
           latitudeDelta: 0.005,
           longitudeDelta: 0.005,
         }}
-        showsUserLocation={true}
+        // showsUserLocation={true}
         followsUserLocation={true}
         customMapStyle={customStyle}
       >
@@ -283,29 +313,46 @@ export default function StoreHome() {
         ))}
       </View>
 
-      <BootomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        style={styles.bottomSheet}
-      >
-        <BottomSheetView>
-          <TextInput
-            style={styles.searchInput}
-            placeholder={i18n.t('searchLocation')}
-            value={searchText}
-            placeholderTextColor="#22223b"
-            onChangeText={handleSearch}
-          />
-          <FlatList
-            data={searchResults}
-            keyExtractor={(item) => item.place_id}
-            renderItem={renderItem}
-          />
-        </BottomSheetView>
-      </BootomSheet>
+      <View style={{ position: 'absolute', bottom: 10, left: 10 }}>
+        <TouchableOpacity
+          onPress={changeStatusModal}
+          style={styles.modalButton}
+        >
+          <Text style={styles.modalButtonText}>
+            {isOpenModal ? 'Cerrar Búsqueda' : 'Buscar Ubicación'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {isOpenModal && (
+        <BootomSheet
+          ref={sheetRef}
+          snapPoints={snapPoints}
+          style={styles.bottomSheet}
+        >
+          <BottomSheetView>
+            <TextInput
+              clearButtonMode="always"
+              showSoftInputOnFocus={true}
+              autoFocus={true}
+              style={styles.searchInput}
+              placeholder={i18n.t('searchLocation')}
+              value={searchText}
+              placeholderTextColor="#22223b"
+              onChangeText={handleSearch}
+            />
+            <FlatList
+              data={searchResults}
+              keyExtractor={(item) => item.place_id}
+              renderItem={renderItem}
+            />
+          </BottomSheetView>
+        </BootomSheet>
+      )}
     </Screen>
   );
 }
+
 const styles = StyleSheet.create({
   bottomSheet: {
     paddingHorizontal: 10,
@@ -478,5 +525,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#aaa', // Gris claro para el resto de la dirección
     marginTop: 5, // Añadido para separar el texto del título
+  },
+
+  // Estilos para el botón del modal
+  modalButton: {
+    backgroundColor: '#f8f9fa', // Rojo claro
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    position: 'absolute',
+    bottom: 0,
+  },
+  modalButtonText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

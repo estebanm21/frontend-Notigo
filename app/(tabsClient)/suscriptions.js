@@ -256,6 +256,7 @@ export default function Suscriptions() {
                 placeholderTextColor="#aaa"
                 style={styles.input}
                 value={searchText}
+                clearButtonMode="always"
                 onChangeText={setSearchText} // Actualiza el estado al escribir
               />
               {searchText.length > 0 && (

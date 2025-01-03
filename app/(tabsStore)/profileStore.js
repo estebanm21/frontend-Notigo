@@ -11,7 +11,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearUserInfo } from '../../src/store/slices/userInfo.slices'; // Acción para limpiar el estado de usuario
-import { useRouter, Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useNavigation } from '@react-navigation/native'; // Importar el hook de navegación
 import { Ionicons } from '@expo/vector-icons'; // Iconos de Ionicons
 import i18n from '../../config/i18nConfig'; // Configuración de internacionalización

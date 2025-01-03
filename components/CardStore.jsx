@@ -33,7 +33,6 @@ export default function CardStore({ item: store, index, calculateDistance, forma
 
 
 
-
     useEffect(() => {
         const checkSubscription = async () => {
             try {
@@ -125,7 +124,7 @@ export default function CardStore({ item: store, index, calculateDistance, forma
                                 <Text style={styles.text_categorie}>{store.categorie}</Text>
                                 <Text style={styles.dot}>.</Text>
                                 <Text style={styles.distance}>
-                                    {isNaN(distanceToStore) ? "Distancia desconocida" : formatDistance(distanceToStore)}
+                                    {store.longitude === null || store.latitude === null ? "Distancia desconocida" : formatDistance(distanceToStore)}
                                 </Text>
                             </View>
 

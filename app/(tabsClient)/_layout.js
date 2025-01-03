@@ -58,7 +58,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="suscriptions"
         options={{
-          title: 'suscriptions',
+          title: i18n.t('subscriptions'),
           tabBarIcon: ({ color }) => (
             <NotificationBellIcon color={color} size={27} />
           ),

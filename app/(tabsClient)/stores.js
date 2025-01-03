@@ -213,6 +213,7 @@ export default function Stores() {
               <TextInput
                 placeholder={i18n.t('searchStore')}
                 placeholderTextColor="#aaa"
+                clearButtonMode="always"
                 style={styles.input}
                 value={searchText}
                 onChangeText={setSearchText} // Actualiza el estado al escribir
